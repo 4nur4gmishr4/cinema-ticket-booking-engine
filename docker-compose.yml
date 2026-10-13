@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=sqlite:///./cinema.db
+      - SECRET_KEY=frame-cinema-super-secret-jwt-key-2026-intern-assign
+    volumes:
+      - ./backend/cinema.db:/app/cinema.db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yozigo Cinema — Curated Movie Ticket Booking</title>
+    <!-- Primary Typography Preload (Zero FOUC & Immediate Font Rendering) -->
+    <link rel="preload" href="/fonts/NetflixSans_W_Rg.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/NetflixSans_W_Md.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/NetflixSans_W_Bd.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Immediate Synchronous Theme Injection (0ms FOUC & Jitter Prevention) -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('cinema_theme');
+          var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
+          document.documentElement.className = theme;
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {
+          document.documentElement.className = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#101110] text-[#F4EFE6] font-sans antialiased min-h-screen w-full selection:bg-[#F0A451] selection:text-[#17120C]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
