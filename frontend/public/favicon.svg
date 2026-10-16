@@ -1,0 +1,15 @@
+<svg viewBox="0 0 150 150" width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="yozigo-film-reel-mask">
+      <rect x="0" y="0" width="150" height="150" fill="#FFFFFF" />
+      <circle cx="73.56" cy="74.68" r="7" fill="#000000" />
+      <circle cx="59.98" cy="43.68" r="15.2" fill="#000000" />
+      <circle cx="98.81" cy="52.76" r="15.2" fill="#000000" />
+      <circle cx="101.63" cy="92.63" r="15.2" fill="#000000" />
+      <circle cx="65.55" cy="107.52" r="15.2" fill="#000000" />
+      <circle cx="39.54" cy="77.19" r="15.2" fill="#000000" />
+    </mask>
+  </defs>
+  <circle cx="73.56" cy="74.68" r="59" fill="#F0A451" mask="url(#yozigo-film-reel-mask)" />
+  <path d="M 73.56 127.5 L 135 127.5 C 136.5 127.5 137.5 129 137.5 130.75 C 137.5 132.5 136.5 134 135 134 L 73.56 134 Z" fill="#F0A451" />
+</svg>

@@ -1,0 +1,784 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Cinema Typography System
+   Weights: Thin (100), Light (300), Regular (400), Medium (500/600), Bold (700/800), Black (900)
+   ========================================================================== */
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Th.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Lt.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Lt.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Rg.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Md.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Md.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Md.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Md.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Bd.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Bd.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/NetflixSans_W_Blk.woff2') format('woff2'),
+       url('https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff2') format('woff2');
+}
+
+@theme {
+  --color-canvas-dark: #34251E;
+  --color-surface-dark: #101110;
+  --color-surface-raised: #191A18;
+  --color-surface-subtle: #22231F;
+  --color-text-primary: #F4EFE6;
+  --color-text-secondary: #B9B2A8;
+  --color-text-muted: #89857D;
+  --color-border-dark: #34332F;
+  --color-border-strong: #514B43;
+  --color-amber-accent: #F0A451;
+  --color-amber-hover: #FFB96B;
+  --color-amber-dark: #17120C;
+  --color-seat-available: #345447;
+  --color-seat-held: #823E46;
+  --color-seat-booked: #292D32;
+  --color-seat-selected: #F0A451;
+  --font-sans: 'Netflix Sans', 'Helvetica Neue', Segoe UI, Roboto, Ubuntu, sans-serif;
+  --font-mono: 'Netflix Sans', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Netflix Sans', 'Helvetica Neue', Segoe UI, Roboto, Ubuntu, sans-serif;
+}
+
+*, *::before, *::after, button, input, select, textarea {
+  font-family: 'Netflix Sans', 'Helvetica Neue', Segoe UI, Roboto, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #101110;
+  color: #F4EFE6;
+  font-family: 'Netflix Sans', 'Helvetica Neue', Segoe UI, Roboto, Ubuntu, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light Mode Luxury Palette */
+html.light body {
+  background-color: #F8F6F2;
+  color: #171513;
+}
+
+html.light .bg-\[\#101110\] {
+  background-color: #F8F6F2 !important;
+}
+
+html.light .bg-\[\#101110\]\/95 {
+  background-color: rgba(248, 246, 242, 0.95) !important;
+}
+
+html.light .bg-\[\#101110\]\/80 {
+  background-color: rgba(248, 246, 242, 0.8) !important;
+}
+
+html.light .bg-\[\#101110\]\/50 {
+  background-color: rgba(248, 246, 242, 0.5) !important;
+}
+
+html.light .bg-\[\#191A18\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#191A18\]\/80 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+html.light .bg-\[\#191A18\]\/90 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+html.light .bg-\[\#22231F\] {
+  background-color: #EFECE6 !important;
+}
+
+html.light .border-\[\#34332F\] {
+  border-color: #E2DDD5 !important;
+}
+
+html.light .border-\[\#34332F\]\/60,
+html.light .border-\[\#34332F\]\/50 {
+  border-color: rgba(226, 221, 213, 0.6) !important;
+}
+
+html.light .text-\[\#F4EFE6\] {
+  color: #171513 !important;
+}
+
+html.light .text-\[\#B9B2A8\] {
+  color: #4A4642 !important;
+}
+
+html.light .text-\[\#89857D\] {
+  color: #767169 !important;
+}
+
+/* Light Mode Comprehensive Hover and Border Overrides (Prevents pitch dark hover states) */
+html.light .hover\:bg-\[\#22231F\]:hover,
+html.light .hover\:bg-\[\#20211E\]:hover,
+html.light .hover\:bg-\[\#20211F\]:hover,
+html.light .hover\:bg-\[\#2A2B27\]:hover,
+html.light .hover\:bg-\[\#191A18\]:hover,
+html.light .hover\:bg-\[\#101110\]:hover {
+  background-color: #E8E4DC !important;
+}
+
+html.light .hover\:border-\[\#514B43\]:hover,
+html.light .hover\:border-\[\#89857D\]:hover,
+html.light .hover\:border-\[\#34332F\]:hover {
+  border-color: #C4BEB4 !important;
+}
+
+html.light .hover\:text-\[\#F4EFE6\]:hover,
+html.light .hover\:text-white:hover {
+  color: #171513 !important;
+}
+
+html.light .border-\[\#514B43\] {
+  border-color: #D8D2C8 !important;
+}
+
+html.light .border-\[\#89857D\] {
+  border-color: #C8C2B8 !important;
+}
+
+/* Light Mode Status Badges & Alerts (Soft Crisp Tones, No Muddy Dark Backdrops) */
+html.light .bg-\[\#345447\]\/20,
+html.light .bg-\[\#345447\]\/30,
+html.light .bg-\[\#345447\]\/40 {
+  background-color: #F0FDF4 !important;
+  border-color: #BBF7D0 !important;
+  color: #16A34A !important;
+}
+
+html.light .text-\[\#6FA987\] {
+  color: #15803D !important;
+}
+
+html.light .border-\[\#345447\] {
+  border-color: #86EFAC !important;
+}
+
+html.light .bg-\[\#823E46\]\/20,
+html.light .bg-\[\#823E46\]\/30 {
+  background-color: #FEF2F2 !important;
+  border-color: #FECACA !important;
+  color: #DC2626 !important;
+}
+
+html.light .hover\:bg-\[\#823E46\]\/40:hover,
+html.light .hover\:bg-\[\#823E46\]\/50:hover {
+  background-color: #FEE2E2 !important;
+  color: #B91C1C !important;
+  border-color: #FCA5A5 !important;
+}
+
+html.light .text-\[\#E47A75\] {
+  color: #DC2626 !important;
+}
+
+html.light .border-\[\#823E46\] {
+  border-color: #FCA5A5 !important;
+}
+
+/* Dedicated My Bookings Card Light Mode Styling */
+.booking-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.light .booking-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .booking-card:hover {
+  background-color: #FFFFFF !important;
+  border-color: #C4BEB4 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .booking-seat-badge {
+  background-color: #F3F0EA !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+}
+
+html.light .booking-confirmed-badge {
+  background-color: #F0FDF4 !important;
+  border-color: #BBF7D0 !important;
+  color: #15803D !important;
+}
+
+html.light .booking-cancel-btn {
+  background-color: #FEF2F2 !important;
+  border-color: #FECACA !important;
+  color: #DC2626 !important;
+}
+
+html.light .booking-cancel-btn:hover {
+  background-color: #FEE2E2 !important;
+  border-color: #FCA5A5 !important;
+  color: #B91C1C !important;
+}
+
+/* Auth Modal Light Mode Adaptations */
+html.light .auth-modal-outer {
+  background-color: #FAF8F5 !important;
+  border-color: #E2DDD5 !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.18) !important;
+}
+
+html.light .auth-modal-vignette-v {
+  background: linear-gradient(to top, #FAF8F5 0%, rgba(250, 248, 245, 0.45) 40%, rgba(250, 248, 245, 0.85) 100%) !important;
+}
+
+html.light .auth-modal-vignette-h {
+  background: linear-gradient(to right, #FAF8F5 0%, rgba(250, 248, 245, 0.5) 50%, #FAF8F5 100%) !important;
+}
+
+html.light .auth-modal-close {
+  background-color: #FFFFFF !important;
+  border-color: #D8D2C8 !important;
+  color: #171513 !important;
+}
+html.light .auth-modal-close:hover {
+  background-color: #EFECE6 !important;
+}
+
+/* Theatrical Showcase on Left: Dark Mode & Light Mode Responsive Styling */
+.auth-modal-left {
+  background-color: rgba(18, 19, 18, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.auth-modal-backdrop-v {
+  background: linear-gradient(to top, rgba(16, 17, 16, 0.95) 0%, rgba(16, 17, 16, 0.4) 50%, rgba(16, 17, 16, 0.65) 100%);
+}
+.auth-modal-backdrop-h {
+  background: linear-gradient(to right, rgba(16, 17, 16, 0.6) 0%, transparent 50%, rgba(16, 17, 16, 0.6) 100%);
+}
+
+.auth-modal-poster {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.auth-modal-brand {
+  color: #F4EFE6 !important;
+}
+
+.auth-modal-tagline {
+  color: #FFFFFF !important;
+}
+
+.auth-modal-arrow {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+.auth-modal-arrow:hover {
+  color: #FFFFFF !important;
+}
+
+.auth-modal-bar {
+  background-color: rgba(255, 255, 255, 0.22);
+}
+.auth-modal-bar:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Light Mode: Luxury Warm Light Container for Showcase Poster */
+html.light .auth-modal-left {
+  background-color: #F3EFEA !important;
+  border: 1px solid #E2DDD5 !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .auth-modal-backdrop-v {
+  background: linear-gradient(to top, #F3EFEA 0%, rgba(243, 239, 234, 0.45) 50%, rgba(243, 239, 234, 0.75) 100%) !important;
+}
+
+html.light .auth-modal-backdrop-h {
+  background: linear-gradient(to right, rgba(243, 239, 234, 0.7) 0%, transparent 50%, rgba(243, 239, 234, 0.7) 100%) !important;
+}
+
+html.light .auth-modal-brand {
+  color: #171513 !important;
+  text-shadow: none !important;
+}
+
+html.light .auth-modal-tagline {
+  color: #171513 !important;
+  text-shadow: none !important;
+}
+
+html.light .auth-modal-arrow {
+  color: rgba(23, 21, 19, 0.6) !important;
+  filter: none !important;
+}
+html.light .auth-modal-arrow:hover {
+  color: #171513 !important;
+}
+
+html.light .auth-modal-poster {
+  border-color: #E2DDD5 !important;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.12) !important;
+}
+
+.auth-modal-bar {
+  background-color: rgba(255, 255, 255, 0.32) !important;
+}
+.auth-modal-bar:hover {
+  background-color: rgba(255, 255, 255, 0.52) !important;
+}
+
+html.light .auth-modal-bar {
+  background-color: rgba(23, 21, 19, 0.22) !important;
+}
+html.light .auth-modal-bar:hover {
+  background-color: rgba(23, 21, 19, 0.42) !important;
+}
+
+html.light .auth-modal-input {
+  background-color: #FFFFFF !important;
+  border-color: #D8D2C8 !important;
+  color: #171513 !important;
+}
+
+html.light .auth-modal-input:focus {
+  border-color: #F0A451 !important;
+}
+
+html.light .auth-modal-outer .auth-modal-quick-btn {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+}
+
+html.light .auth-modal-outer .auth-modal-quick-btn:hover {
+  background-color: #EFECE6 !important;
+  border-color: #C4BEB4 !important;
+}
+
+/* ==========================================================================
+   Cinematic Header: Seamlessly Merged with Hero Banner Spotlight Gradient
+   ========================================================================== */
+.app-header {
+  background: linear-gradient(180deg, rgba(16, 17, 16, 0.95) 0%, rgba(16, 17, 16, 0.75) 55%, rgba(16, 17, 16, 0.35) 85%, transparent 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+html.light .app-header {
+  background: linear-gradient(180deg, rgba(248, 246, 242, 0.96) 0%, rgba(248, 246, 242, 0.82) 55%, rgba(248, 246, 242, 0.45) 85%, transparent 100%) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Hero Spotlight: Dark & Light Mode Theme Adaptations */
+.hero-gradient-vertical {
+  background: linear-gradient(to top, #101110 0%, transparent 40%, rgba(16, 17, 16, 0.5) 100%);
+}
+.hero-gradient-horizontal {
+  background: linear-gradient(to right, #101110 0%, rgba(16, 17, 16, 0.7) 45%, transparent 100%);
+}
+
+html.light .hero-spotlight {
+  background-color: #F8F6F2 !important;
+  border-bottom-color: #E2DDD5 !important;
+}
+html.light .hero-gradient-vertical {
+  background: linear-gradient(to top, #F8F6F2 0%, rgba(248, 246, 242, 0.2) 40%, rgba(248, 246, 242, 0.6) 100%) !important;
+}
+html.light .hero-gradient-horizontal {
+  background: linear-gradient(to right, #F8F6F2 0%, rgba(248, 246, 242, 0.85) 45%, rgba(248, 246, 242, 0.1) 100%) !important;
+}
+html.light .hero-title {
+  color: #171513 !important;
+}
+html.light .hero-desc {
+  color: #4A4642 !important;
+}
+html.light .hero-subtitle {
+  color: #5C5852 !important;
+}
+html.light .hero-spec-pill {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+}
+html.light .hero-btn-secondary {
+  background-color: #FFFFFF !important;
+  color: #171513 !important;
+  border-color: #E2DDD5 !important;
+}
+html.light .hero-btn-secondary:hover {
+  background-color: #EFECE6 !important;
+}
+html.light .hero-poster-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.12) !important;
+}
+html.light .hero-nav-arrow {
+  color: rgba(23, 21, 19, 0.6) !important;
+}
+html.light .hero-nav-arrow:hover {
+  color: #171513 !important;
+}
+.hero-bar-track {
+  background-color: rgba(255, 255, 255, 0.32) !important;
+}
+.hero-bar-track:hover {
+  background-color: rgba(255, 255, 255, 0.52) !important;
+}
+
+html.light .hero-bar-track {
+  background-color: rgba(23, 21, 19, 0.22) !important;
+}
+html.light .hero-bar-track:hover {
+  background-color: rgba(23, 21, 19, 0.42) !important;
+}
+
+/* Primary Pill Button Utility */
+.pill-btn {
+  background-color: #191A18;
+  border: 1px solid #34332F;
+  color: #F4EFE6;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pill-btn:hover {
+  background-color: #22231F;
+  border-color: #514B43;
+}
+html.light .pill-btn {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+html.light .pill-btn:hover {
+  background-color: #F8F6F2 !important;
+  border-color: #C4BEB4 !important;
+}
+
+/* Showtime Chip: Light Mode Styles */
+html.light .showtime-chip {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+}
+html.light .showtime-chip:hover {
+  border-color: #B9B2A8 !important;
+}
+html.light .showtime-chip .bg-\[\#101110\] {
+  background-color: #F8F6F2 !important;
+  border-color: #E2DDD5 !important;
+}
+
+
+/* Movie Detail Hero Gradient */
+.detail-hero-gradient {
+  background: linear-gradient(to top, #101110 0%, rgba(16, 17, 16, 0.8) 50%, transparent 100%);
+}
+html.light .detail-hero-gradient {
+  background: linear-gradient(to top, #F8F6F2 0%, rgba(248, 246, 242, 0.85) 60%, transparent 100%) !important;
+}
+
+/* Progressive slide progress keyframe animation */
+@keyframes slideProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-slideProgress {
+  animation-name: slideProgress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.screen-arch {
+  background: radial-gradient(50% 100% at 50% 100%, rgba(240, 164, 81, 0.08) 0%, transparent 100%);
+  border-top: 2px solid #514B43;
+  border-radius: 50% 50% 0 0 / 22px 22px 0 0;
+}
+
+/* Cinematic Page Switch Animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #101110;
+}
+html.light ::-webkit-scrollbar-track {
+  background: #F8F6F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #34332F;
+  border-radius: 3px;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #D8D2CA;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #514B43;
+}
+
+/* Authentic Film Reel Spin & 3s Pause Keyframe Animation */
+@keyframes filmReelSpinWithPause {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.film-reel-wheel {
+  transform: rotate(var(--film-reel-deg, 0deg));
+  transform-origin: 73.56px 74.68px;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   User Profile Dropdown Menu System (Light and Dark Modes)
+   ========================================================================== */
+.profile-dropdown-menu {
+  background-color: rgba(28, 28, 30, 0.98);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #F4EFE6;
+}
+
+html.light .profile-dropdown-menu {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.18) !important;
+}
+
+html.light .profile-dropdown-menu .profile-menu-item {
+  color: #171513 !important;
+}
+
+html.light .profile-dropdown-menu button:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================================================
+   Admin Panel Component Styles (Dark & Light Mode Polish)
+   ========================================================================== */
+.admin-card {
+  background-color: #191A18;
+  border: 1px solid #34332F;
+  color: #F4EFE6;
+  transition: all 0.2s ease;
+}
+
+html.light .admin-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.admin-card-inner {
+  background-color: #22231F;
+  border: 1px solid #34332F;
+}
+
+html.light .admin-card-inner {
+  background-color: #F8F6F2 !important;
+  border-color: #E2DDD5 !important;
+  color: #171513 !important;
+}
+
+.admin-input {
+  background-color: #22231F;
+  border: 1px solid #34332F;
+  color: #F4EFE6;
+}
+
+.admin-input:focus {
+  border-color: #F0A451;
+  outline: none;
+}
+
+html.light .admin-input {
+  background-color: #FFFFFF !important;
+  border-color: #D8D2CA !important;
+  color: #171513 !important;
+}
+
+html.light .admin-input:focus {
+  border-color: #F0A451 !important;
+}
+
+/* Admin Seat Map Styles */
+.admin-seat-available {
+  background-color: #2D4A3E;
+  color: #A7F3D0;
+  border: 1px solid #3E6554;
+}
+
+html.light .admin-seat-available {
+  background-color: #E8F5E9 !important;
+  color: #1B5E20 !important;
+  border: 1px solid #A5D6A7 !important;
+  font-weight: 700 !important;
+}
+
+.admin-seat-booked {
+  background-color: #292D32;
+  color: #89857D;
+  border: 1px solid #3E434B;
+}
+
+html.light .admin-seat-booked {
+  background-color: #212529 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #212529 !important;
+  font-weight: 700 !important;
+}
+
+.admin-legend-available {
+  background-color: #2D4A3E;
+  border: 1px solid #3E6554;
+}
+
+html.light .admin-legend-available {
+  background-color: #E8F5E9 !important;
+  border: 1px solid #A5D6A7 !important;
+}
+
+.admin-legend-booked {
+  background-color: #292D32;
+  border: 1px solid #3E434B;
+}
+
+html.light .admin-legend-booked {
+  background-color: #212529 !important;
+  border: 1px solid #212529 !important;
+}
+
+.admin-seat-row-label {
+  color: #89857D;
+}
+
+html.light .admin-seat-row-label {
+  color: #5C5852 !important;
+}
+
+/* Admin Tabs */
+.admin-tab-container {
+  background-color: #191A18;
+  border: 1px solid #34332F;
+}
+
+html.light .admin-tab-container {
+  background-color: #F0EDE7 !important;
+  border-color: #E2DDD5 !important;
+}
+
+.admin-tab-btn-inactive {
+  color: #B9B2A8;
+}
+
+html.light .admin-tab-btn-inactive {
+  color: #5C5852 !important;
+}
+
+html.light .admin-tab-btn-inactive:hover {
+  color: #171513 !important;
+}
+
+
