@@ -818,4 +818,127 @@ html.light .custom-modal-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #B5ACA0;
 }
 
+/* ==========================================================================
+   Payment Modal & Simulator Styling (Dark & Light Mode)
+   ========================================================================== */
+.payment-modal-card {
+  background-color: #101110;
+  border-color: #34332F;
+}
+
+html.light .payment-modal-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.payment-modal-header {
+  background-color: #101110;
+  border-color: rgba(52, 51, 47, 0.6);
+}
+
+html.light .payment-modal-header {
+  background-color: #FFFFFF !important;
+  border-color: #E2DDD5 !important;
+}
+
+.payment-summary-box {
+  background-color: #191A18;
+  border-color: #34332F;
+}
+
+html.light .payment-summary-box {
+  background-color: #F8F6F2 !important;
+  border-color: #E2DDD5 !important;
+}
+
+/* Payment Modal Buttons: Crisp, high-contrast, beautiful in both modes */
+.btn-simulate-success {
+  background-color: #15803D !important;
+  border: 1px solid #16A34A !important;
+  color: #FFFFFF !important;
+}
+
+.btn-simulate-success:hover {
+  background-color: #166534 !important;
+}
+
+.btn-simulate-success span,
+.btn-simulate-success svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+html.light .btn-simulate-success {
+  background-color: #16A34A !important;
+  border: 1px solid #15803D !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px 0 rgba(22, 163, 74, 0.25) !important;
+}
+
+html.light .btn-simulate-success:hover {
+  background-color: #15803D !important;
+}
+
+html.light .btn-simulate-success span,
+html.light .btn-simulate-success svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+.btn-simulate-failure {
+  background-color: #B91C1C !important;
+  border: 1px solid #DC2626 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-simulate-failure:hover {
+  background-color: #991B1B !important;
+}
+
+.btn-simulate-failure span,
+.btn-simulate-failure svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+html.light .btn-simulate-failure {
+  background-color: #DC2626 !important;
+  border: 1px solid #B91C1C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px 0 rgba(220, 38, 38, 0.25) !important;
+}
+
+html.light .btn-simulate-failure:hover {
+  background-color: #B91C1C !important;
+}
+
+html.light .btn-simulate-failure span,
+html.light .btn-simulate-failure svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+.payment-close-btn {
+  background-color: #191A18;
+  border-color: #34332F;
+  color: #89857D;
+}
+
+.payment-close-btn:hover {
+  color: #F4EFE6;
+  background-color: #22231F;
+}
+
+html.light .payment-close-btn {
+  background-color: #F3EFE8 !important;
+  border-color: #E2DDD5 !important;
+  color: #5A554E !important;
+}
+
+html.light .payment-close-btn:hover {
+  background-color: #E8E2D7 !important;
+  color: #171513 !important;
+}
+
 
