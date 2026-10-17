@@ -112,7 +112,18 @@ Schedules screenings of movies on Screen 1.
 
 *Business Constraint:* Shows on the same screen cannot have overlapping time ranges `[start_time, end_time]`. Validated programmatically before insert/update.
 
-### 2.4 `seat_holds` Table
+### 2.4 `seats` Table
+Stores the 80 physical cinema seats mapped across 8 rows and 10 columns on Screen 1.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | Integer | Primary Key, Autoincrement | Unique seat identifier |
+| `seat_number` | String(10) | Not Null, Unique, Indexed | Seat label code (`'A1'` through `'H10'`) |
+| `row` | String(5) | Not Null | Row letter (`'A'` through `'H'`) |
+| `col` | Integer | Not Null | Column index (`1` through `10`) |
+| `tier` | String(20) | Not Null, Default: `'Classic'` | Pricing tier (`'Recliner'`, `'Prime'`, `'Classic'`) |
+
+### 2.5 `seat_holds` Table
 Tracks short-lived (5-minute) seat reservations during the selection and checkout flow.
 
 | Column | Type | Constraints | Description |
@@ -129,7 +140,7 @@ Tracks short-lived (5-minute) seat reservations during the selection and checkou
 - `UniqueConstraint("show_id", "seat_number", name="uq_show_seat_hold")`: Guarantees a seat cannot be concurrently held by more than one user for the same show.
 - Hold expiration queries filter out any records where `expires_at < utcnow()`.
 
-### 2.5 `bookings` Table
+### 2.6 `bookings` Table
 Stores confirmed ticket orders.
 
 | Column | Type | Constraints | Description |
@@ -144,7 +155,7 @@ Stores confirmed ticket orders.
 | `payment_status` | String(20) | Not Null, Default: `'SUCCESS'` | Payment state: `'SUCCESS'` or `'FAILED'` |
 | `created_at` | DateTime | Not Null, Default: UTC Now | Booking timestamp |
 
-### 2.6 `booking_seats` Table
+### 2.7 `booking_seats` Table
 Normalizes seat allocations for confirmed bookings to guarantee strict per-seat uniqueness.
 
 | Column | Type | Constraints | Description |

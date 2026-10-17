@@ -17,5 +17,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
+    environment:
+      - BACKEND_URL=http://backend:8001
     depends_on:
       - backend

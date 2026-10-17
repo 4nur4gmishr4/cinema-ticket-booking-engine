@@ -223,3 +223,67 @@ For immediate verification of the system without requiring manual setup:
      - Total Gross Revenue: **₹2,640.00**
      - Total Shows: **288**
    - Per-show occupancy inspection matching 100% of seats between admin and customer perspectives.
+
+---
+
+## 7. Production Deployment Guide
+
+The application is structured for independent, zero-friction cloud deployment. The frontend and backend can be hosted on separate cloud platforms (e.g., Vercel + Render) or together via Docker.
+
+### Option A: Cloud Split Deployment (Recommended)
+
+#### 1. Backend Deployment (Render / Railway)
+
+1. **Create Service**:
+   - In [Render](https://render.com) or [Railway](https://railway.app), create a new **Web Service** connected to this GitHub repository.
+2. **Configure Settings**:
+   - **Root Directory**: `backend`
+   - **Environment / Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python seed.py && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+3. **Environment Variables**:
+   - `DATABASE_URL`: `sqlite:///./cinema.db` (or your PostgreSQL connection string)
+   - `SECRET_KEY`: `<generated-secure-random-key>`
+   - `PORT`: `8001` (Render injects `$PORT` automatically)
+4. **Deploy**:
+   - Once deployed, copy your assigned public URL (e.g., `https://cinema-api.onrender.com`).
+
+#### 2. Frontend Deployment (Vercel / Netlify)
+
+1. **Import Project**:
+   - In [Vercel](https://vercel.com) or [Netlify](https://netlify.com), import this repository.
+2. **Configure Settings**:
+   - **Root Directory**: `frontend`
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. **Environment Variables**:
+   - `VITE_API_BASE_URL`: `https://cinema-api.onrender.com` *(your backend URL)*
+4. **Deploy**:
+   - Your frontend will build and connect directly to the backend with CORS pre-configured.
+
+---
+
+### Option B: Containerized Deployment (Docker Compose)
+
+To run the complete production stack on any VPS, cloud VM, or local environment with a single command:
+
+```bash
+# Clone the repository
+git clone https://github.com/4nur4gmishr4/cinema-ticket-booking-engine.git
+cd cinema-ticket-booking-engine
+
+# Build and start both containers in the background
+docker compose up -d --build
+```
+
+- **Frontend Application**: `http://localhost:5173`
+- **Backend API**: `http://localhost:8001`
+- **API Swagger Documentation**: `http://localhost:8001/docs`
+- **Persistent Volume**: Database is preserved across restarts in `./backend/cinema.db`.
+
+To stop the services:
+```bash
+docker compose down
+```
+

@@ -13,7 +13,9 @@ import type {
 } from '../types';
 
 
-const BASE_URL = '/api/v1';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '')}/api/v1`
+  : '/api/v1';
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('cinema_token');
