@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { X, Eye, EyeOff, AlertCircle, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { UserAvatarIcon, SecurityShieldIcon } from './Icons';
@@ -149,10 +150,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
     }
   };
 
-  return (
+  const modalJSX = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-md animate-fadeIn p-3 sm:p-6"
+      className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain bg-black/75 backdrop-blur-md animate-fadeIn p-3 sm:p-6"
+      style={{ WebkitOverflowScrolling: 'touch' }}
     >
       <div className="min-h-full flex items-center justify-center py-2 sm:py-4">
         {/* Outer Card with Dynamic Ambient Backdrop */}
@@ -501,4 +503,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalJSX, document.body) : null;
 };

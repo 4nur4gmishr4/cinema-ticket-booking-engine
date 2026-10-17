@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { BookingOut } from '../types';
 import { CheckCircle2, Calendar, Clock, X, ArrowRight } from 'lucide-react';
 
@@ -39,10 +40,11 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   const dateStr = dt.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
   const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  return (
+  const modalJSX = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md p-3 sm:p-6 animate-fadeIn"
+      className="fixed inset-0 z-[9999] overflow-y-auto overscroll-contain bg-black/85 backdrop-blur-md p-3 sm:p-6 animate-fadeIn"
+      style={{ WebkitOverflowScrolling: 'touch' }}
     >
       <div className="min-h-full flex items-center justify-center py-2 sm:py-4">
         <div
@@ -154,4 +156,6 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalJSX, document.body) : null;
 };
