@@ -30,6 +30,12 @@ dist-ssr/
 # Test Automation & Local Utilities
 run_playwright_test.py
 tts.py
+generate_test_video.mjs
+*.wav
+*.mp3
+*.mp4
+temp_record/
+SKILL.md
 playwright-report/
 test-results/
 *.log
