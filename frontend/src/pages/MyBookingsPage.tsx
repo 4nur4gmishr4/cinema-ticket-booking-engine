@@ -79,7 +79,7 @@ export const MyBookingsPage: React.FC<MyBookingsPageProps> = ({ onRequireAuth, o
   }
 
   return (
-    <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 flex flex-col gap-8 animate-fadeIn">
+    <div id="my-bookings" className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 flex flex-col gap-8 animate-fadeIn">
       {/* Header */}
       <div className="border-b border-[#34332F] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>

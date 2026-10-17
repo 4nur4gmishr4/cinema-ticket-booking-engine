@@ -387,7 +387,7 @@ export const SeatBookingPage: React.FC<SeatBookingPageProps> = ({
       </div>
 
       {/* 2. Auditorium Seat Map: Indian Theater Standard Tiers (RECLINER, PRIME, CLASSIC) */}
-      <div className="w-full px-2 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 sm:py-6 flex flex-col items-center">
+      <div id="seat-map" className="w-full px-2 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 sm:py-6 flex flex-col items-center">
         <div className="w-full max-w-4xl bg-[#191A18] border border-[#34332F] rounded-2xl p-4 sm:p-8 shadow-2xl flex flex-col items-center">
 
           {/* Seat Map Matrix with Center Aisle Walkway */}

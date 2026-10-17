@@ -99,6 +99,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
   font-family: 'Netflix Sans', 'Helvetica Neue', Segoe UI, Roboto, Ubuntu, sans-serif;
 }
 
@@ -779,6 +780,42 @@ html.light .admin-tab-btn-inactive {
 
 html.light .admin-tab-btn-inactive:hover {
   color: #171513 !important;
+}
+
+/* Custom Sleek Modal Scrollbar */
+.custom-modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #34332F transparent;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #34332F;
+  border-radius: 9999px;
+}
+
+.custom-modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #514B43;
+}
+
+html.light .custom-modal-scrollbar {
+  scrollbar-color: #D1C9BE transparent;
+}
+
+html.light .custom-modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #D1C9BE;
+}
+
+html.light .custom-modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #B5ACA0;
 }
 
 

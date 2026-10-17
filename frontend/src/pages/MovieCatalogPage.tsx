@@ -255,7 +255,7 @@ export const MovieCatalogPage: React.FC<MovieCatalogPageProps> = ({ onSelectMovi
       
       {/* 1. Cinematic Spotlight Carousel (Top 5 Blockbusters) */}
       {activeCarouselMovie ? (
-        <section className="hero-spotlight relative w-full overflow-hidden bg-[#101110] border-b border-[#34332F]/60 -mt-[60px] pt-[60px]">
+        <section id="hero" className="hero-spotlight relative w-full overflow-hidden bg-[#101110] border-b border-[#34332F]/60 -mt-[60px] pt-[60px]">
           {/* Ambient Glowing Movie Poster Backdrop with smooth crossfade */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {featuredMovies.map((m, idx) => (
@@ -408,7 +408,7 @@ export const MovieCatalogPage: React.FC<MovieCatalogPageProps> = ({ onSelectMovi
       )}
 
       {/* 2. Section Heading: This Week's Releases */}
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-7 pb-3 bg-[#101110]">
+      <section id="releases" className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-7 pb-3 bg-[#101110]">
         <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F4EFE6] select-none">
             This Week's Releases
@@ -500,7 +500,7 @@ export const MovieCatalogPage: React.FC<MovieCatalogPageProps> = ({ onSelectMovi
       </section>
 
       {/* 4. Section 2: Only in Theatres with Search & Filter Bar */}
-      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-8 pb-3 bg-[#101110] border-t border-[#34332F]/50">
+      <section id="theatres" className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pt-8 pb-3 bg-[#101110] border-t border-[#34332F]/50">
         <div className="w-full max-w-7xl mx-auto flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F4EFE6] select-none">

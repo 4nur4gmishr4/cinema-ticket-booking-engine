@@ -152,14 +152,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md animate-fadeIn overflow-hidden select-none"
-      onWheel={(e) => e.stopPropagation()}
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-md animate-fadeIn p-3 sm:p-6"
     >
-      {/* Outer Card with Dynamic Ambient Backdrop */}
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="auth-modal-outer relative w-full max-w-4xl border border-white/15 rounded-3xl p-3 sm:p-5 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-stretch bg-[#101110] max-h-[92dvh] sm:max-h-[88dvh] overflow-y-auto overscroll-contain"
-      >
+      <div className="min-h-full flex items-center justify-center py-2 sm:py-4">
+        {/* Outer Card with Dynamic Ambient Backdrop */}
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="auth-modal-outer relative w-full max-w-4xl border border-white/15 rounded-3xl p-3 sm:p-5 shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-stretch bg-[#101110] my-auto max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-3rem)] overflow-y-auto overscroll-contain custom-modal-scrollbar"
+        >
         
         {/* Dynamic ambient backdrop that shifts rich colors with active rotating movie poster */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -497,6 +497,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           </div>
         </div>
 
+        </div>
       </div>
     </div>
   );

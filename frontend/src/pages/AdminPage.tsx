@@ -7,7 +7,14 @@ import { SecurityShieldIcon } from '../components/Icons';
 
 export const AdminPage: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'occupancy' | 'shows' | 'movies'>('occupancy');
+  const [activeTab, setActiveTab] = useState<'occupancy' | 'shows' | 'movies'>(() => {
+    if (typeof window !== 'undefined') {
+      const h = window.location.hash.toLowerCase();
+      if (h.includes('schedule') || h.includes('shows')) return 'shows';
+      if (h.includes('movies') || h.includes('movie')) return 'movies';
+    }
+    return 'occupancy';
+  });
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [shows, setShows] = useState<Show[]>([]);
@@ -263,7 +270,7 @@ export const AdminPage: React.FC = () => {
 
       {/* TAB 1: SHOW OCCUPANCY & CINEMA LEDGER */}
       {activeTab === 'occupancy' && (
-        <div className="flex flex-col gap-6">
+        <div id="admin-occupancy" className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-[#F4EFE6]">
@@ -565,7 +572,7 @@ export const AdminPage: React.FC = () => {
 
       {/* TAB 2: SCHEDULE SHOWS */}
       {activeTab === 'shows' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div id="admin-schedule" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Create Show Form */}
           <div className="lg:col-span-5 p-6 rounded-3xl admin-card flex flex-col gap-4">
             <h2 className="text-lg font-bold text-[#F4EFE6]">Schedule a New Show</h2>
@@ -698,7 +705,7 @@ export const AdminPage: React.FC = () => {
 
       {/* TAB 3: MANAGE MOVIES */}
       {activeTab === 'movies' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div id="admin-movies" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Add Movie Form */}
           <div className="lg:col-span-5 p-6 rounded-3xl admin-card flex flex-col gap-4">
             <h2 className="text-lg font-bold text-[#F4EFE6]">Add Movie to Catalog</h2>

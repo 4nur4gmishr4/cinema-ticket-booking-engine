@@ -18,7 +18,9 @@ export const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBac
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as any });
+    if (!window.location.hash.includes('showtimes')) {
+      window.scrollTo({ top: 0, behavior: 'instant' as any });
+    }
     loadMovieDetails();
   }, [movieId]);
 
@@ -33,6 +35,11 @@ export const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBac
       setDateGroups(showsData);
       if (showsData.length > 0) {
         setSelectedDate(showsData[0].date);
+      }
+      if (window.location.hash.includes('showtimes')) {
+        setTimeout(() => {
+          document.getElementById('showtimes')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
       }
     } catch (err: any) {
       setError(err.message || 'Failed to load movie details.');
@@ -204,7 +211,7 @@ export const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBac
             </div>
 
             {/* Right Column: Showtimes & Schedule Hub */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
+            <div id="showtimes" className="lg:col-span-7 flex flex-col gap-6">
               <div className="border-b border-[#34332F] pb-3">
                 <span className="text-[10px] font-bold text-[#F0A451] uppercase tracking-wider">
                   Live Showtimes &amp; Screenings

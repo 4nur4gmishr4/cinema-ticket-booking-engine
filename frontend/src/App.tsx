@@ -17,47 +17,119 @@ interface RouteState {
   view: ViewMode;
   movieId: number | null;
   showId: number | null;
+  sectionId?: string | null;
 }
+
+/**
+ * Universal scroll controller:
+ * - If targetSectionId is provided, smoothly scrolls to that element with navbar offset
+ * - If targetSectionId is omitted or null, ALWAYS opens the page cleanly at the very top (0, 0)
+ */
+export const scrollToTopOrSection = (targetSectionId?: string | null) => {
+  if (typeof window === 'undefined') return;
+
+  if (targetSectionId) {
+    let attempts = 0;
+    const maxAttempts = 15;
+    const checkAndScroll = () => {
+      const element = document.getElementById(targetSectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(checkAndScroll, 60);
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    };
+    requestAnimationFrame(checkAndScroll);
+  } else {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }
+};
 
 const parseHash = (): RouteState => {
   if (typeof window === 'undefined') {
-    return { view: 'movies', movieId: null, showId: null };
+    return { view: 'movies', movieId: null, showId: null, sectionId: null };
   }
-  const hash = window.location.hash.replace(/^#\/?/, '');
-  if (!hash || hash === 'movies') {
-    return { view: 'movies', movieId: null, showId: null };
+  const rawHash = window.location.hash.replace(/^#\/?/, '');
+  if (!rawHash) {
+    return { view: 'movies', movieId: null, showId: null, sectionId: null };
   }
-  if (hash.startsWith('movie/')) {
-    const id = parseInt(hash.replace('movie/', ''), 10);
-    return { view: 'movie-detail', movieId: isNaN(id) ? null : id, showId: null };
+
+  let path = rawHash;
+  let sectionId: string | null = null;
+
+  // Extract secondary anchor e.g. "movie/1#showtimes" or "movies#theatres"
+  if (path.includes('#')) {
+    const parts = path.split('#');
+    path = parts[0];
+    sectionId = parts[1] || null;
   }
-  if (hash.startsWith('booking/')) {
-    const parts = hash.replace('booking/', '').split('?');
-    const showId = parseInt(parts[0], 10);
+
+  let queryParams: URLSearchParams | null = null;
+  if (path.includes('?')) {
+    const parts = path.split('?');
+    path = parts[0];
+    queryParams = new URLSearchParams(parts[1]);
+    if (!sectionId && queryParams.get('section')) {
+      sectionId = queryParams.get('section');
+    }
+  }
+
+  // Section aliases pointing to home sections
+  if (['theatres', 'now-showing', 'catalog', 'all-movies'].includes(path)) {
+    return { view: 'movies', movieId: null, showId: null, sectionId: 'theatres' };
+  }
+  if (['releases', 'this-weeks-releases', 'featured'].includes(path)) {
+    return { view: 'movies', movieId: null, showId: null, sectionId: 'releases' };
+  }
+  if (['hero', 'spotlight', 'top'].includes(path)) {
+    return { view: 'movies', movieId: null, showId: null, sectionId: 'hero' };
+  }
+  if (['search'].includes(path)) {
+    return { view: 'movies', movieId: null, showId: null, sectionId: 'theatres' };
+  }
+
+  if (!path || path === 'movies') {
+    return { view: 'movies', movieId: null, showId: null, sectionId };
+  }
+
+  if (path.startsWith('movie/')) {
+    const id = parseInt(path.replace('movie/', ''), 10);
+    return { view: 'movie-detail', movieId: isNaN(id) ? null : id, showId: null, sectionId };
+  }
+
+  if (path.startsWith('booking/')) {
+    const showId = parseInt(path.replace('booking/', ''), 10);
     let movieId: number | null = null;
-    if (parts[1]) {
-      const params = new URLSearchParams(parts[1]);
-      const mId = params.get('movie');
-      if (mId) movieId = parseInt(mId, 10);
+    if (queryParams && queryParams.get('movie')) {
+      const mId = parseInt(queryParams.get('movie')!, 10);
+      if (!isNaN(mId)) movieId = mId;
     }
-    return { view: 'booking', movieId, showId: isNaN(showId) ? null : showId };
+    return { view: 'booking', movieId, showId: isNaN(showId) ? null : showId, sectionId };
   }
-  if (hash === 'my-bookings') {
-    return { view: 'my-bookings', movieId: null, showId: null };
+
+  if (path === 'my-bookings') {
+    return { view: 'my-bookings', movieId: null, showId: null, sectionId };
   }
-  if (hash === 'admin') {
-    return { view: 'admin', movieId: null, showId: null };
+
+  if (path === 'admin') {
+    return { view: 'admin', movieId: null, showId: null, sectionId };
   }
-  if (hash.startsWith('legal/')) {
-    const sec = hash.replace('legal/', '') as LegalSection;
+
+  if (path.startsWith('legal/')) {
+    const sec = path.replace('legal/', '') as LegalSection;
     if (['terms', 'privacy', 'cookies', 'guidelines'].includes(sec)) {
-      return { view: sec, movieId: null, showId: null };
+      return { view: sec, movieId: null, showId: null, sectionId };
     }
   }
-  if (['terms', 'privacy', 'cookies', 'guidelines'].includes(hash)) {
-    return { view: hash as LegalSection, movieId: null, showId: null };
+
+  if (['terms', 'privacy', 'cookies', 'guidelines'].includes(path)) {
+    return { view: path as LegalSection, movieId: null, showId: null, sectionId };
   }
-  return { view: 'movies', movieId: null, showId: null };
+
+  return { view: 'movies', movieId: null, showId: null, sectionId };
 };
 
 const MainApp: React.FC = () => {
@@ -68,20 +140,27 @@ const MainApp: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingNavView, setPendingNavView] = useState<ViewMode | null>(null);
 
-  // Synchronize URL hash with history entries
+  // Synchronize URL hash with history entries and handle page scroll
   const navigateTo = useCallback(
-    (view: ViewMode, movieId?: number | null, showId?: number | null, replace: boolean = false) => {
+    (
+      view: ViewMode,
+      movieId?: number | null,
+      showId?: number | null,
+      replace: boolean = false,
+      sectionId?: string | null
+    ) => {
       let targetHash = '#/';
       if (view === 'movies') {
-        targetHash = '#/';
+        targetHash = sectionId ? `#/${sectionId}` : '#/';
       } else if (view === 'movie-detail' && movieId) {
-        targetHash = `#/movie/${movieId}`;
+        targetHash = sectionId ? `#/movie/${movieId}#${sectionId}` : `#/movie/${movieId}`;
       } else if (view === 'booking' && showId) {
-        targetHash = movieId ? `#/booking/${showId}?movie=${movieId}` : `#/booking/${showId}`;
+        const base = movieId ? `#/booking/${showId}?movie=${movieId}` : `#/booking/${showId}`;
+        targetHash = sectionId ? `${base}#${sectionId}` : base;
       } else if (view === 'my-bookings') {
-        targetHash = '#/my-bookings';
+        targetHash = sectionId ? `#/my-bookings#${sectionId}` : '#/my-bookings';
       } else if (view === 'admin') {
-        targetHash = '#/admin';
+        targetHash = sectionId ? `#/admin#${sectionId}` : '#/admin';
       } else if (['terms', 'privacy', 'cookies', 'guidelines'].includes(view)) {
         targetHash = `#/legal/${view}`;
       }
@@ -90,6 +169,7 @@ const MainApp: React.FC = () => {
         view,
         movieId: movieId !== undefined ? movieId : null,
         showId: showId !== undefined ? showId : null,
+        sectionId: sectionId || null,
       };
 
       if (replace) {
@@ -101,6 +181,9 @@ const MainApp: React.FC = () => {
       setCurrentView(view);
       if (movieId !== undefined) setSelectedMovieId(movieId);
       if (showId !== undefined) setSelectedShowId(showId);
+
+      // Scroll cleanly to top (or to specific target section if requested)
+      scrollToTopOrSection(sectionId);
     },
     []
   );
@@ -117,14 +200,15 @@ const MainApp: React.FC = () => {
     [navigateTo]
   );
 
-  // Listen for browser Back/Forward (popstate)
+  // Listen for browser Back/Forward (popstate) & Hash Change
   useEffect(() => {
-    const handlePopState = () => {
+    const handleUrlChange = () => {
       const route = parseHash();
       setCurrentView(route.view);
       setSelectedMovieId(route.movieId);
       setSelectedShowId(route.showId);
       setIsAuthModalOpen(false);
+      scrollToTopOrSection(route.sectionId);
     };
 
     // On initial mount, sync from hash or set base #/
@@ -133,17 +217,42 @@ const MainApp: React.FC = () => {
       setCurrentView(initial.view);
       setSelectedMovieId(initial.movieId);
       setSelectedShowId(initial.showId);
+      scrollToTopOrSection(initial.sectionId);
     } else {
       window.history.replaceState(
-        { view: 'movies', movieId: null, showId: null },
+        { view: 'movies', movieId: null, showId: null, sectionId: null },
         '',
         '#/'
       );
+      scrollToTopOrSection(null);
     }
 
-    window.addEventListener('popstate', handlePopState);
+    // Intercept clicks on anchor tags pointing to sections or hash routes
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest('a');
+      if (!target) return;
+      const href = target.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+
+      const section = href.replace(/^#\/?/, '');
+      if (section) {
+        const el = document.getElementById(section);
+        if (el) {
+          e.preventDefault();
+          scrollToTopOrSection(section);
+          window.history.replaceState(null, '', href);
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    document.addEventListener('click', handleAnchorClick);
+
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+      document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 
@@ -165,7 +274,7 @@ const MainApp: React.FC = () => {
     navigateTo('booking', selectedMovieId, showId);
   };
 
-  const handleNavClick = (view: 'movies' | 'my-bookings' | 'admin') => {
+  const handleNavClick = (view: 'movies' | 'my-bookings' | 'admin', sectionId?: string) => {
     if (view === 'my-bookings' && !user) {
       setPendingNavView('my-bookings');
       setIsAuthModalOpen(true);
@@ -176,7 +285,7 @@ const MainApp: React.FC = () => {
       setIsAuthModalOpen(true);
       return;
     }
-    navigateTo(view);
+    navigateTo(view, null, null, false, sectionId);
   };
 
   const handleOpenLegal = (section: LegalSection) => {

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import type { LegalSection } from '../pages/LegalPage';
 
 interface FooterProps {
-  onNavigate: (view: 'movies' | 'my-bookings' | 'admin') => void;
+  onNavigate: (view: 'movies' | 'my-bookings' | 'admin', sectionId?: string) => void;
   onNavigateLegal: (section: LegalSection) => void;
 }
 
@@ -42,7 +42,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onNavigateLegal }) =
               Curated theatrical releases with deterministic seat booking and real-time concurrency protection.
             </p>
 
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#191A18] border border-[#34332F] text-xs text-[#B9B2A8] w-fit">
+            <div 
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#191A18] border border-[#34332F] text-xs text-[#B9B2A8] w-fit cursor-pointer hover:border-[#F0A451]/50 transition-colors"
+              onClick={() => onNavigate('movies', 'theatres')}
+              title="Jump to Bengaluru Screenings"
+            >
               <MapPin className="w-3.5 h-3.5 text-[#F0A451] shrink-0" />
               <span className="font-semibold text-[#F4EFE6]">Bengaluru, India</span>
             </div>
@@ -68,7 +72,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onNavigateLegal }) =
                 <>
                   <li>
                     <button
-                      onClick={() => onNavigate('movies')}
+                      onClick={() => onNavigate('movies', 'theatres')}
                       className="flex items-center gap-2 hover:text-[#F0A451] transition-colors text-left cursor-pointer"
                     >
                       <Film className="w-3.5 h-3.5 shrink-0" />

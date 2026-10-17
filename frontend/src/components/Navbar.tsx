@@ -22,7 +22,7 @@ import type { LegalSection } from '../pages/LegalPage';
 
 interface NavbarProps {
   currentView: 'movies' | 'my-bookings' | 'admin' | 'booking';
-  onNavigate: (view: 'movies' | 'my-bookings' | 'admin') => void;
+  onNavigate: (view: 'movies' | 'my-bookings' | 'admin', sectionId?: string) => void;
   onOpenAuth: () => void;
   onNavigateLegal?: (section: LegalSection) => void;
 }
@@ -87,7 +87,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Cinema Venue Indicator */}
-            <div className="hidden sm:flex items-center gap-1.5 h-9 px-3.5 rounded-full pill-btn text-xs select-none cursor-default">
+            <div 
+              className="hidden sm:flex items-center gap-1.5 h-9 px-3.5 rounded-full pill-btn text-xs select-none cursor-pointer hover:border-[#F0A451]/50 transition-colors"
+              onClick={() => onNavigate('movies', 'theatres')}
+              title="Jump to Bengaluru Screenings"
+            >
               <LocationPinIcon className="w-3.5 h-3.5 text-[#F0A451] shrink-0" />
               <span className="font-semibold text-[#F4EFE6]">Bengaluru</span>
             </div>
