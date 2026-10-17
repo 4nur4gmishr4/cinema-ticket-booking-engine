@@ -4,6 +4,12 @@ Full-stack movie ticket booking web application developed for the Yozigo Full-St
 
 Built with React 19, TypeScript, and Vite on the frontend, Python, FastAPI, and SQLAlchemy on the backend, and an ACID-compliant SQLite relational database with Write-Ahead Logging (WAL) and foreign keys enabled.
 
+- 🌐 **Live Web Application**: [https://cinema-ticket-booking-engine.vercel.app/#/](https://cinema-ticket-booking-engine.vercel.app/#/)
+- 🎥 **Product Demo Video (3–5 min)**: [Google Drive Link](https://drive.google.com/file/d/1XNrx1VHq6wVUkF0Jj6QlswcJTsjBnIMl/view?usp=sharing)
+- 🐙 **GitHub Repository**: [https://github.com/4nur4gmishr4/cinema-ticket-booking-engine](https://github.com/4nur4gmishr4/cinema-ticket-booking-engine)
+- 🧪 **Backend Test Suite**: 12/12 Automated Pytest Tests Passing (Unit, Concurrency, and Integration)
+- 📊 **Database Design Document**: [`database_design.md`](./database_design.md)
+
 ---
 
 ## 1. Finished Flows & Project Status
@@ -201,28 +207,24 @@ npm run dev
 
 ## 6. Pre-Configured Test Bookings & Ledger State
 
-For immediate verification of the system without requiring manual setup:
+For immediate verification of the system without requiring manual pre-booking:
 
 1. **Customer View (`customer@yozigo.com` / `customer123`):**
-   - **Upcoming Confirmed Reservations (6 Bookings):**
-     - *The Dark Knight* (Show 1): Seats **B3, B4** (`BK-522AD352`)
-     - *Interstellar* (Show 17): Seats **C5, C6** (`BK-YOZ-IN03`)
-     - *3 Idiots* (Show 97): 8 Seats **A1–A8** across 4 vouchers (`BK-5C831CDE`, `BK-CFEE429D`, `BK-F3DE7405`, `BK-3D6FEF04`)
-   - **Past / Cancelled Reservations (3 Bookings):**
-     - *The Dark Knight* (Show 1): `BK-000001` (D4, D5)
-     - *3 Idiots* (Show 97): `BK-B409441D` (A3, A4)
-     - *Dangal* (Show 113): `BK-0814BA0D` (F3, F4)
+   - **Upcoming Confirmed Reservations:**
+     - *The Dark Knight*: Seats **B3, B4** (`BK-YOZ-DK01`)
+     - *3 Idiots*: Seats **A3, A4** (`BK-YOZ-3I02`)
+     - *Interstellar*: Seats **C5, C6** (`BK-YOZ-IN03`)
+   - **Verifiable Flows:**
+     - Navigate to **My Bookings** to inspect confirmed digital vouchers with reference codes, showtimes, and seat badges.
+     - Test **1-Click Cancellation (Bonus Flow 8)** directly on any eligible upcoming reservation (>2 hours prior to showtime); observe immediate voucher status change to `CANCELLED` and instant seat release.
+     - Open the seat map for *The Dark Knight*, *3 Idiots*, or *Interstellar* to confirm seats B3/B4, A3/A4, or C5/C6 appear in the disabled charcoal gray **Booked** state.
+
 2. **Admin View (`admin@yozigo.com` / `admin123`):**
-   - Header badge displays **`Cinema Admin`**.
-   - **Show Occupancy Dropdown**: Defaults to **All Shows — Cinema Master Ledger (Overview)**.
-   - Aggregate statistics:
-     - Total Bookings: **9**
-     - Confirmed: **6**
-     - Cancelled: **3**
-     - Total Booked Seats: **12**
-     - Total Gross Revenue: **₹2,640.00**
-     - Total Shows: **288**
-   - Per-show occupancy inspection matching 100% of seats between admin and customer perspectives.
+   - Header badge confirms **`Cinema Admin`** role.
+   - Navigate to the **Admin Dashboard** (`/#/admin`) to inspect:
+     - **Global Cinema Master Ledger (Bonus Flow 9):** Aggregates real-time metrics across all 288 shows (Total Bookings, Confirmed Orders, Cancelled Bookings, Total Occupied Seats, and Gross Revenue collected in INR).
+     - **Per-Show Occupancy Audit:** Select any screening from the dropdown to view its real-time auditorium seat map and detailed customer booking roster (Customer Name, Reference ID, Seats, Amount, and Status).
+   - Any booking or cancellation made by the customer dynamically updates the Master Ledger and per-show metrics in real time.
 
 ---
 
@@ -286,4 +288,38 @@ To stop the services:
 ```bash
 docker compose down
 ```
+
+---
+
+## 8. Ready-to-Send Email Submission Summary
+
+Copy and paste this template when replying to the Yozigo hiring email:
+
+```markdown
+Hi Yozigo Hiring Team,
+
+Thank you for the opportunity to build the Movie Ticket Booking Web Application for the Full-Stack Developer Intern assessment.
+
+Here are the required deliverables:
+
+1. GitHub Repository: https://github.com/4nur4gmishr4/cinema-ticket-booking-engine
+2. Live Application: https://cinema-ticket-booking-engine.vercel.app/#/
+3. Database Design: https://github.com/4nur4gmishr4/cinema-ticket-booking-engine/blob/master/database_design.md
+4. 3 to 5 Minute Demo Video: https://drive.google.com/file/d/1XNrx1VHq6wVUkF0Jj6QlswcJTsjBnIMl/view?usp=sharing
+
+Key Highlights & Implementation Summary:
+- Finished Flows: 10/10 Complete (Flows 1–7 Mandatory + Flows 8–10 Bonus).
+- Test Logins:
+  - Customer: customer@yozigo.com / customer123 (includes pre-seeded active bookings for instant evaluation)
+  - Admin: admin@yozigo.com / admin123 (full cinema overview, schedule management, and occupancy audit)
+- Double-Booking Prevention: Enforced with ACID database transactions and composite unique constraints (UniqueConstraint("show_id", "seat_number")) on both seat_holds and booking_seats, backed by an automated concurrency pytest suite.
+- Live Seat Updates: Synchronized across tabs and sessions using the BroadcastChannel API and background polling.
+- Testing: 12/12 automated pytest unit and concurrency tests passing.
+
+Looking forward to the next round!
+
+Warm regards,
+Anurag Mishra
+```
+
 

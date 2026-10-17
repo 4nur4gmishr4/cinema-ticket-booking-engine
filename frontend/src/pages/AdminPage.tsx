@@ -46,6 +46,7 @@ export const AdminPage: React.FC = () => {
   const [occupancyData, setOccupancyData] = useState<AdminOccupancyResponse | null>(null);
   const [loadingData, setLoadingData] = useState(false);
   const [ledgerSearch, setLedgerSearch] = useState('');
+  const [ledgerStatusFilter, setLedgerStatusFilter] = useState<'ALL' | 'CONFIRMED' | 'CANCELLED'>('ALL');
 
   useEffect(() => {
     if (user?.role === 'admin') {
@@ -189,6 +190,7 @@ export const AdminPage: React.FC = () => {
 
   // Filter ledger bookings when in 'ALL' view
   const filteredLedgerBookings = overviewData?.bookings.filter((b) => {
+    if (ledgerStatusFilter !== 'ALL' && b.status !== ledgerStatusFilter) return false;
     if (!ledgerSearch.trim()) return true;
     const query = ledgerSearch.toLowerCase();
     return (
@@ -379,16 +381,40 @@ export const AdminPage: React.FC = () => {
                     </h3>
                   </div>
 
-                  {/* Search Bar for Ledger */}
-                  <div className="relative max-w-xs w-full">
-                    <Search className="w-3.5 h-3.5 text-[#89857D] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                      type="text"
-                      placeholder="Search ref, movie, customer, seat..."
-                      value={ledgerSearch}
-                      onChange={(e) => setLedgerSearch(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 rounded-xl admin-input text-xs"
-                    />
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Status Filter Tabs */}
+                    <div className="flex items-center gap-1 p-0.5 rounded-xl bg-black/20 dark:bg-white/5 border border-[#34332F]">
+                      {(['ALL', 'CONFIRMED', 'CANCELLED'] as const).map((filter) => (
+                        <button
+                          key={filter}
+                          type="button"
+                          onClick={() => setLedgerStatusFilter(filter)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                            ledgerStatusFilter === filter
+                              ? 'bg-[#F0A451] text-[#17120C]'
+                              : 'text-[#89857D] hover:text-[#F4EFE6]'
+                          }`}
+                        >
+                          {filter === 'ALL'
+                            ? `All (${overviewData.total_bookings_count})`
+                            : filter === 'CONFIRMED'
+                            ? `Confirmed (${overviewData.confirmed_bookings_count})`
+                            : `Cancelled (${overviewData.cancelled_bookings_count})`}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Search Bar for Ledger */}
+                    <div className="relative max-w-xs w-full">
+                      <Search className="w-3.5 h-3.5 text-[#89857D] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        placeholder="Search ref, movie, customer, seat..."
+                        value={ledgerSearch}
+                        onChange={(e) => setLedgerSearch(e.target.value)}
+                        className="w-full pl-8 pr-3 py-1.5 rounded-xl admin-input text-xs"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -505,7 +531,7 @@ export const AdminPage: React.FC = () => {
                             <th className="py-2 px-1">Reference</th>
                             <th className="py-2 px-1">Customer</th>
                             <th className="py-2 px-1">Seats</th>
-                            <th className="py-2 px-1">Time</th>
+                            <th className="py-2 px-1">Showtime</th>
                             <th className="py-2 px-1">Amount</th>
                           </tr>
                         </thead>
@@ -516,7 +542,7 @@ export const AdminPage: React.FC = () => {
                               <td className="py-2.5 px-1 text-[#F4EFE6] font-medium">{b.customer_name}</td>
                               <td className="py-2.5 px-1 font-mono">{b.seats.join(', ')}</td>
                               <td className="py-2.5 px-1 text-[#89857D]">
-                                {new Date(b.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                {new Date(b.show_time || occupancyData.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </td>
                               <td className="py-2.5 px-1 font-semibold text-[#F4EFE6]">₹{b.total_amount.toFixed(2)}</td>
                             </tr>

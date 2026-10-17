@@ -33,6 +33,7 @@ class CustomerBookingsResponse(BaseModel):
 class AdminBookingOut(BaseModel):
     booking_id: int
     booking_reference: str
+    show_time: Optional[datetime] = None
     customer_name: str
     customer_email: str
     seats: list[str]

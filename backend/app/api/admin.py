@@ -207,7 +207,20 @@ def admin_get_show_occupancy(
         .all()
     )
 
-    booked_seats_count = db.query(BookingSeat).filter(BookingSeat.show_id == show_id).count()
+    # Collect all confirmed seat codes for this show (single source of truth)
+    confirmed_seat_set = set()
+    for b in confirmed_bookings:
+        for s in b.seat_summary.split(","):
+            code = s.strip()
+            if code:
+                confirmed_seat_set.add(code)
+
+    # Also check booking_seats table and merge
+    db_seats = set(
+        s[0] for s in db.query(BookingSeat.seat_number).filter(BookingSeat.show_id == show_id).all()
+    )
+    booked_set = confirmed_seat_set.union(db_seats)
+    booked_seats_count = len(booked_set)
     occupancy_pct = round((booked_seats_count / 80.0) * 100, 1)
     total_revenue = sum(b.total_amount for b in confirmed_bookings)
 
@@ -217,6 +230,7 @@ def admin_get_show_occupancy(
         booking_list.append(AdminBookingOut(
             booking_id=b.id,
             booking_reference=b.booking_reference,
+            show_time=show.start_time,
             customer_name=b.user.name if b.user else "Unknown Customer",
             customer_email=b.user.email if b.user else "",
             seats=seats,
@@ -227,9 +241,6 @@ def admin_get_show_occupancy(
 
     # Generate admin seat map
     all_seats = get_all_cinema_seats(db)
-    booked_set = set(
-        s[0] for s in db.query(BookingSeat.seat_number).filter(BookingSeat.show_id == show_id).all()
-    )
 
     seat_map_outs: List[SeatOut] = []
     for s in all_seats:
@@ -277,7 +288,11 @@ def admin_get_cinema_overview(
     confirmed_bookings = [b for b in all_bookings if b.status == "CONFIRMED"]
     cancelled_bookings = [b for b in all_bookings if b.status == "CANCELLED"]
 
-    total_booked_seats = db.query(BookingSeat).count()
+    # Derive total booked seats directly from CONFIRMED bookings so cards and ledger match 100%
+    total_booked_seats = sum(
+        len([s for s in b.seat_summary.split(",") if s.strip()])
+        for b in confirmed_bookings
+    )
     total_gross_revenue = sum(b.total_amount for b in confirmed_bookings)
     active_shows_count = db.query(Show).filter(Show.start_time >= datetime.utcnow() - timedelta(hours=4)).count()
     if active_shows_count == 0:

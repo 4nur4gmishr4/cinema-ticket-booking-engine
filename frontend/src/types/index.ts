@@ -102,6 +102,7 @@ export interface CustomerBookingsResponse {
 export interface AdminBookingOut {
   booking_id: number;
   booking_reference: string;
+  show_time?: string;
   customer_name: string;
   customer_email: string;
   seats: string[];
