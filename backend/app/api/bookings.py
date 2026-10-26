@@ -1,3 +1,6 @@
+# --- API Router: Bookings & Payments (Flow 5, 6 & 8) ---
+# Purpose: Endpoints for payment simulation, viewing customer bookings, receipt lookup, and ticket cancellation.
+
 from datetime import datetime, timedelta
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -17,6 +20,10 @@ from app.services.booking_service import process_simulated_payment, cancel_custo
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
+# Endpoint: POST /api/v1/bookings/pay
+# Simulates the payment step.
+# Outcome SUCCESS: Converts 5-min hold into a confirmed booking inside an ACID transaction.
+# Outcome FAILURE: Leaves the seats held for the rest of the 5-minute countdown so user can retry.
 @router.post("/pay", response_model=BookingOut)
 def pay_and_confirm_booking(
     payload: PaymentSimulateRequest,

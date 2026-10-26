@@ -1,3 +1,7 @@
+# --- Pytest Concurrency & Double-Booking Test Suite ---
+# Purpose: Proves that double-booking is mathematically impossible under high concurrent load.
+# Uses ThreadPoolExecutor to fire simultaneous multi-threaded HTTP requests competing for the exact same seat.
+
 import concurrent.futures
 from fastapi.testclient import TestClient
 from app.main import app
@@ -5,10 +9,10 @@ from app.main import app
 def test_concurrent_hold_same_seat_prevents_double_booking(client, seeded_data):
     """
     CRITICAL ACCEPTANCE TEST:
-    Proves that when two users try to hold the same seat at the same moment,
-    exactly ONE succeeds and the other receives a 409 Conflict error.
+    Proves that when two users try to hold the same seat at the exact same moment,
+    exactly ONE succeeds (HTTP 200 OK) and the other receives HTTP 409 Conflict error.
     """
-    # 1. Login user 1
+    # Step 1: Login User 1
     res1 = client.post("/api/v1/auth/login", json={
         "email": "user1@test.com",
         "password": "CustomerPass123"
@@ -16,7 +20,7 @@ def test_concurrent_hold_same_seat_prevents_double_booking(client, seeded_data):
     token1 = res1.json()["access_token"]
     headers1 = {"Authorization": f"Bearer {token1}"}
 
-    # 2. Login user 2
+    # Step 2: Login User 2
     res2 = client.post("/api/v1/auth/login", json={
         "email": "user2@test.com",
         "password": "CustomerPass123"

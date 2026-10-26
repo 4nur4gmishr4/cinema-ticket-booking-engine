@@ -2,10 +2,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { User } from '../types';
 import { api } from '../services/api';
 
+// --- Context: AuthContext ---
+// Purpose: Provides global user authentication state across all React components.
+// Stores: Logged-in user data, JWT access token, and functions to login, register, and logout.
+
 interface AuthContextType {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
+  user: User | null;              // Currently authenticated user object (or null if guest)
+  token: string | null;           // JWT bearer token string from localStorage
+  loading: boolean;               // True while validating credentials
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -15,7 +19,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Synchronous initialization from localStorage prevents any frame-0 jitter or unlogged-in flash on hard refresh (Ctrl+Shift+R)
+  // Step 1: Read token synchronously from localStorage on initial render.
+  // This prevents any visual "flash" of being logged-out when refreshing the page.
   const [token, setToken] = useState<string | null>(() => {
     try {
       return localStorage.getItem('cinema_token');
@@ -24,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
+  // Step 2: Read cached user profile synchronously from localStorage.
   const [user, setUser] = useState<User | null>(() => {
     try {
       const savedUser = localStorage.getItem('cinema_user');
@@ -39,6 +45,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [loading] = useState<boolean>(false);
 
+  // Step 3: Run silent background verification on app load.
+  // Calls GET /api/v1/auth/me to verify the token is still valid with the server.
   useEffect(() => {
     const savedToken = localStorage.getItem('cinema_token');
     if (!savedToken) {

@@ -4,17 +4,23 @@ import type { BookingOut } from '../types';
 import { api } from '../services/api';
 import { CheckCircle2, XCircle, AlertCircle, X, Clock } from 'lucide-react';
 
+// --- Component: PaymentModal ---
+// Purpose: This modal simulates a real-world checkout/payment gateway.
+// It allows users to test two outcomes: Payment Success or Payment Failure.
+// If Success: It finalizes the booking in the database.
+// If Failure: It shows an error message, but leaves seats held until the 5-min timer expires.
+
 interface PaymentModalProps {
-  isOpen: boolean;
-  holdToken: string;
-  showId?: number;
-  movieTitle: string;
-  selectedSeats: string[];
-  totalAmount: number;
-  remainingSeconds: number;
-  onClose: () => void;
-  onBookingSuccess: (booking: BookingOut) => void;
-  onPaymentFailed: (message: string) => void;
+  isOpen: boolean;               // Whether this modal is currently visible on screen
+  holdToken: string;             // The unique 5-minute hold token received from the backend
+  showId?: number;               // ID of the selected show
+  movieTitle: string;            // Name of the movie being booked
+  selectedSeats: string[];       // List of seat codes (e.g., ['A1', 'A2'])
+  totalAmount: number;           // Total price in INR (seats count * ticket price)
+  remainingSeconds: number;      // Seconds left before the 5-minute seat hold expires
+  onClose: () => void;           // Callback function when user closes the modal
+  onBookingSuccess: (booking: BookingOut) => void; // Callback when booking is successfully confirmed
+  onPaymentFailed: (message: string) => void;      // Callback when payment simulation fails
 }
 
 export const PaymentModal: React.FC<PaymentModalProps> = ({
@@ -28,11 +34,16 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   onBookingSuccess,
   onPaymentFailed,
 }) => {
+  // Local state:
+  // loading: true while waiting for the backend API response
   const [loading, setLoading] = useState(false);
+  // paymentResult: tracks whether the latest attempt was SUCCESS or FAILURE
   const [paymentResult, setPaymentResult] = useState<'SUCCESS' | 'FAILURE' | null>(null);
+  // errorMessage: stores any error message returned from the backend
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Lock body scroll while modal is open, and handle Escape key
+  // Hook: Prevents the background page from scrolling when modal is open,
+  // and allows user to close the modal by pressing the 'Escape' key.
   useEffect(() => {
     if (!isOpen) return;
     const originalBodyOverflow = document.body.style.overflow;
@@ -43,19 +54,25 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
 
+    // Cleanup: restore scroll and remove event listener when modal unmounts
     return () => {
       document.body.style.overflow = originalBodyOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
 
+  // If modal is closed, render nothing
   if (!isOpen) return null;
 
+  // Function: Calls the backend to simulate payment
+  // If outcome is 'SUCCESS', the backend converts the temporary hold into a confirmed booking.
+  // If outcome is 'FAILURE', the backend records failure and rejects the transaction.
   const handleSimulatePayment = async (outcome: 'SUCCESS' | 'FAILURE') => {
     setLoading(true);
     setErrorMessage(null);
 
     try {
+      // Call backend API /api/bookings/simulate-payment
       const booking = await api.simulatePayment(holdToken, outcome);
       setPaymentResult('SUCCESS');
       onBookingSuccess(booking);
@@ -72,12 +89,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     }
   };
 
+  // Helper: Formats remaining seconds into MM:SS format (e.g. 295 secs -> "04:55")
   const formatCountdown = (secs: number) => {
     const mins = Math.floor(secs / 60);
     const s = secs % 60;
     return `${mins.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  // The Modal UI JSX
   const modalJSX = (
     <div
       onClick={onClose}

@@ -1,3 +1,6 @@
+# --- API Router: Seats & Holds (Flow 3 & 4) ---
+# Purpose: Endpoints for querying the auditorium layout, creating 5-minute atomic holds, and releasing holds.
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -9,6 +12,8 @@ from app.models.seat_hold import SeatHold
 
 router = APIRouter(prefix="/shows/{show_id}/seats", tags=["Seats"])
 
+# Endpoint: GET /api/v1/shows/{show_id}/seats
+# Returns: Full 80-seat auditorium matrix with real-time status (AVAILABLE, BOOKED, HELD_BY_ME, HELD_BY_OTHER)
 @router.get("", response_model=SeatMapResponse)
 def get_seat_map(
     show_id: int,
@@ -21,6 +26,8 @@ def get_seat_map(
     """
     return get_show_seat_map(db, show_id, current_user)
 
+# Endpoint: POST /api/v1/shows/{show_id}/seats/hold
+# Creates a 5-minute hold on 1 to 6 seats for the authenticated customer. Returns hold_token.
 @router.post("/hold", response_model=HoldSeatsResponse)
 def hold_seats(
     show_id: int,

@@ -1,3 +1,6 @@
+# --- API Router: Movies & Schedules (Flow 2) ---
+# Purpose: Public endpoints to list movies, view synopsis, and retrieve upcoming shows grouped by date.
+
 from datetime import datetime
 from typing import List
 from collections import defaultdict
@@ -15,6 +18,8 @@ from app.schemas.show import ShowOut, ShowsByDateGroup
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
+# Endpoint: GET /api/v1/movies
+# Retrieves all movies in the catalog, sorted alphabetically by title
 @router.get("", response_model=List[MovieOut])
 def list_movies(db: Session = Depends(get_db)):
     """

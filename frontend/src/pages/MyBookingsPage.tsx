@@ -4,25 +4,37 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Ticket, Calendar, Clock, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 
+// --- Page Component: MyBookingsPage (Flow 8) ---
+// Purpose: Customer portal showing confirmed tickets, booking history, and cancellation.
+// Features:
+// 1. Lists active upcoming bookings and past reservations for logged-in user.
+// 2. Cancellation: Customer can cancel a booking, which triggers an ACID rollback
+//    in the backend and immediately frees those seats for other users.
+// 3. Displays ticket badges: Reference code, seats, screen, showtime, and total price.
+
 interface MyBookingsPageProps {
-  onRequireAuth: () => void;
-  onBrowseMovies: () => void;
+  onRequireAuth: () => void;  // Callback if user tries to view bookings while unauthenticated
+  onBrowseMovies: () => void; // Callback to go back to movie catalog
 }
 
 export const MyBookingsPage: React.FC<MyBookingsPageProps> = ({ onRequireAuth, onBrowseMovies }) => {
   const { user } = useAuth();
+  // State: bookingsData holds confirmed and cancelled bookings
   const [bookingsData, setBookingsData] = useState<CustomerBookingsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // cancellingId: tracks which booking ID is currently undergoing cancellation API call
   const [cancellingId, setCancellingId] = useState<number | null>(null);
   const [actionMessage, setActionMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
+  // Hook: Load customer bookings on mount whenever user is available
   useEffect(() => {
     if (user) {
       loadBookings();
     }
   }, [user]);
 
+  // Function: Fetch bookings from GET /api/v1/bookings/my
   const loadBookings = async () => {
     setLoading(true);
     setError(null);
@@ -36,6 +48,7 @@ export const MyBookingsPage: React.FC<MyBookingsPageProps> = ({ onRequireAuth, o
     }
   };
 
+  // Function: Cancels a confirmed booking, frees seats, and refetches list
   const handleCancelBooking = async (bookingId: number) => {
     if (!confirm('Are you sure you want to cancel this booking? This will immediately free your seats.')) {
       return;

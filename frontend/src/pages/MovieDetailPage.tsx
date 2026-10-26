@@ -4,19 +4,29 @@ import { api } from '../services/api';
 import { ArrowLeft, Clock, Globe, Calendar, Users, Film, Ticket, AlertCircle, ChevronRight } from 'lucide-react';
 import { MovieReelIcon } from '../components/Icons';
 
+// --- Page Component: MovieDetailPage ---
+// Purpose: Displays detailed information about a selected movie and its available showtimes.
+// Features:
+// 1. Movie synopsis, cast, certification, duration, genre, and release date.
+// 2. Calendar date tabs grouping upcoming screenings.
+// 3. Show cards displaying showtime, screen name (e.g. Audi 1 - Dolby Atmos), and ticket price.
+// 4. Clicking a show card opens the 80-seat auditorium map for that show.
+
 interface MovieDetailPageProps {
-  movieId: number;
-  onBack: () => void;
-  onSelectShow: (showId: number) => void;
+  movieId: number;                   // ID of the movie currently being viewed
+  onBack: () => void;                // Callback to return to movie catalog
+  onSelectShow: (showId: number) => void; // Callback when user chooses a showtime
 }
 
 export const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBack, onSelectShow }) => {
+  // State:
   const [movie, setMovie] = useState<Movie | null>(null);
   const [dateGroups, setDateGroups] = useState<ShowsByDateGroup[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Hook: Loads movie info and grouped showtimes when movieId changes
   useEffect(() => {
     if (!window.location.hash.includes('showtimes')) {
       window.scrollTo({ top: 0, behavior: 'instant' as any });
@@ -24,6 +34,7 @@ export const MovieDetailPage: React.FC<MovieDetailPageProps> = ({ movieId, onBac
     loadMovieDetails();
   }, [movieId]);
 
+  // Function: Parallel fetch for movie details and date-grouped shows
   const loadMovieDetails = async () => {
     setLoading(true);
     try {

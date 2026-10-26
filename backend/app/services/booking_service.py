@@ -1,3 +1,11 @@
+# --- Service: Booking & Concurrency Engine ---
+# Purpose: Core transactional business logic for seat holds, payments, bookings, and cancellations.
+# Key Architecture:
+# 1. Atomic 5-Minute Holds: Generates UUID hold token and sets expires_at = now + 300s.
+# 2. Concurrency Protection: Uses db.begin() transactions and composite unique constraints
+#    (show_id, seat_number) to prevent any two users from booking or holding the same seat.
+# 3. Automatic Expiry Cleanup: Purges dead holds before checking availability or taking holds.
+
 import uuid
 from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
@@ -15,6 +23,8 @@ from app.core.datetime_utils import get_utc_now
 from app.schemas.seat import SeatOut, SeatMapResponse, HoldSeatsResponse
 from app.schemas.booking import BookingOut
 
+# Function: Deletes all temporary seat holds where the 5-minute timer has expired.
+# Called automatically before loading seat maps, before acquiring new holds, and by the 30s background worker.
 def cleanup_expired_holds(db: Session, show_id: Optional[int] = None) -> int:
     """Removes all holds where expires_at is in the past."""
     now = get_utc_now()
@@ -25,6 +35,7 @@ def cleanup_expired_holds(db: Session, show_id: Optional[int] = None) -> int:
     db.commit()
     return count
 
+# Function: Ensures and returns all 80 auditorium seats (Rows A-H, Columns 1-10)
 def get_all_cinema_seats(db: Session) -> List[Seat]:
     """Ensures and returns all 80 seats (A1-H10) sorted by row and column."""
     seats = db.query(Seat).order_by(Seat.row, Seat.col).all()

@@ -6,11 +6,20 @@ import { PaymentModal } from '../components/PaymentModal';
 import { BookingConfirmationModal } from '../components/BookingConfirmationModal';
 import { ArrowLeft, Clock, RefreshCw, AlertCircle, X, Check, Lock, ShieldCheck, ArrowRight, Armchair } from 'lucide-react';
 
+// --- Component: SeatBookingPage ---
+// Purpose: Interactive 80-seat cinema auditorium map (8 rows: A-H, 10 columns: 1-10).
+// Key Features:
+// 1. Live seat status (Available, Selected, Held by Me, Held by Other, Booked).
+// 2. Real-time multi-tab sync using BroadcastChannel API and non-blocking 3s polling.
+// 3. 5-minute atomic seat hold with live countdown timer.
+// 4. Maximum limit of 6 seats per booking.
+// 5. Seamless integration with simulated payment gateway.
+
 interface SeatBookingPageProps {
-  showId: number;
-  onBack: () => void;
-  onViewMyBookings: () => void;
-  onRequireAuth: () => void;
+  showId: number;              // ID of the movie show being booked
+  onBack: () => void;          // Callback to go back to movie details page
+  onViewMyBookings: () => void;// Callback to navigate to "My Bookings" page
+  onRequireAuth: () => void;   // Callback to prompt login modal if user is not authenticated
 }
 
 export const SeatBookingPage: React.FC<SeatBookingPageProps> = ({
@@ -19,23 +28,38 @@ export const SeatBookingPage: React.FC<SeatBookingPageProps> = ({
   onViewMyBookings,
   onRequireAuth,
 }) => {
+  // Access currently logged-in user from AuthContext
   const { user } = useAuth();
+
+  // Component State:
+  // seatMap: full auditorium data from backend (movie title, price, seat list with statuses)
   const [seatMap, setSeatMap] = useState<SeatMapResponse | null>(null);
+  // selectedSeatIds: array of selected seat numbers (e.g. ['A1', 'A2'])
   const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
+  // loading: true while fetching seat map on initial load
   const [loading, setLoading] = useState(true);
+  // holding: true while communicating with backend to lock/hold seats
   const [holding, setHolding] = useState(false);
+  // error: displays error banner (e.g., seat already held, max seats exceeded)
   const [error, setError] = useState<string | null>(null);
+  // infoMessage: displays success/informational banner
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
 
-  // Hold state
+  // Seat Hold & Checkout State:
+  // holdToken: unique UUID token returned by backend when seats are locked for 5 mins
   const [holdToken, setHoldToken] = useState<string | null>(null);
+  // remainingSeconds: countdown timer in seconds (starts at 300s = 5 mins)
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
+  // isPaymentModalOpen: controls visibility of simulated payment gateway modal
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  // confirmedBooking: holds confirmed booking object after payment succeeds
   const [confirmedBooking, setConfirmedBooking] = useState<BookingOut | null>(null);
 
+  // Reference for 1-second interval timer
   const countdownTimerRef = useRef<any>(null);
 
-  // Broadcast seat changes across tabs using BroadcastChannel and localStorage
+  // Function: Broadcasts seat events to other open tabs in the same browser
+  // Uses HTML5 BroadcastChannel API, with localStorage trigger as fallback
   const broadcastSeatUpdate = (targetShowId: number, eventType: string) => {
     try {
       if (typeof window !== 'undefined') {
@@ -52,10 +76,11 @@ export const SeatBookingPage: React.FC<SeatBookingPageProps> = ({
     } catch (_) {}
   };
 
+  // Function: Updates component state with fresh seat map data from backend
   const applySeatMapData = (data: SeatMapResponse) => {
     setSeatMap(data);
 
-    // Synchronize active database hold for the logged-in user across all tabs/windows
+    // If backend reports an active hold for this user, restore countdown and held seats
     if (data.current_hold_token && (data.hold_remaining_seconds || 0) > 0) {
       setHoldToken(data.current_hold_token);
       setRemainingSeconds(data.hold_remaining_seconds || 0);

@@ -1,3 +1,6 @@
+# --- API Router: Authentication (Flow 1) ---
+# Purpose: Endpoints for user registration, login credential validation, and fetching the active profile.
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -8,6 +11,8 @@ from app.api.deps import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
+# Endpoint: POST /api/v1/auth/register
+# Registers a new user. Enforces >= 8 char password, unique email, bcrypt hashing, and default role="customer".
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserRegister, db: Session = Depends(get_db)):
     """

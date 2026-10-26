@@ -11,20 +11,25 @@ import { MyBookingsPage } from './pages/MyBookingsPage';
 import { AdminPage } from './pages/AdminPage';
 import { LegalPage, type LegalSection } from './pages/LegalPage';
 
+// --- Root Component: App & MainApp ---
+// Purpose: Main entry point for the frontend application.
+// Responsibilities:
+// 1. Client-Side Routing: Hash-based routing (#/, #/movie/:id, #/booking/:showId, #/my-bookings, #/admin).
+// 2. Browser History: Full browser Back/Forward (popstate) navigation support.
+// 3. Global Context Providers: Wraps the app in AuthProvider and ThemeProvider.
+// 4. Modal Management: Global AuthModal trigger and legal modal controls.
+
 type ViewMode = 'movies' | 'movie-detail' | 'booking' | 'my-bookings' | 'admin' | LegalSection;
 
 interface RouteState {
-  view: ViewMode;
-  movieId: number | null;
-  showId: number | null;
-  sectionId?: string | null;
+  view: ViewMode;             // Current screen being rendered
+  movieId: number | null;     // Movie ID if viewing details or booking
+  showId: number | null;      // Show ID if viewing seat booking map
+  sectionId?: string | null;  // Anchor link (e.g., 'theatres' or 'showtimes')
 }
 
-/**
- * Universal scroll controller:
- * - If targetSectionId is provided, smoothly scrolls to that element with navbar offset
- * - If targetSectionId is omitted or null, ALWAYS opens the page cleanly at the very top (0, 0)
- */
+// Function: Universal scroll controller
+// Smoothly scrolls to target section ID or resets the page cleanly to the top (0, 0).
 export const scrollToTopOrSection = (targetSectionId?: string | null) => {
   if (typeof window === 'undefined') return;
 
@@ -48,6 +53,7 @@ export const scrollToTopOrSection = (targetSectionId?: string | null) => {
   }
 };
 
+// Function: Parses the URL window.location.hash into a typed RouteState object
 const parseHash = (): RouteState => {
   if (typeof window === 'undefined') {
     return { view: 'movies', movieId: null, showId: null, sectionId: null };

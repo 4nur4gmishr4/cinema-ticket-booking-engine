@@ -4,13 +4,24 @@ import { useAuth } from '../context/AuthContext';
 import { X, Eye, EyeOff, AlertCircle, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { UserAvatarIcon, SecurityShieldIcon } from './Icons';
 
+// --- Component: AuthModal ---
+// Purpose: Multi-purpose modal for user authentication.
+// Features:
+// 1. Tab toggle between "Create Account" (Register) and "Welcome Back" (Sign In).
+// 2. Client-side validation: Password >= 8 characters, Terms agreement.
+// 3. One-click quick login buttons for test evaluation:
+//    - Customer: customer@yozigo.com / customer123 (pre-seeded with bookings)
+//    - Admin: admin@yozigo.com / admin123 (full access to admin dashboard)
+// 4. Visual cinematic rotating poster carousel on the left side.
+
 interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: () => void;
-  onOpenLegal?: (tab: 'terms' | 'privacy') => void;
+  isOpen: boolean;                          // Visibility of the modal
+  onClose: () => void;                      // Close callback
+  onSuccess?: () => void;                   // Optional callback fired after successful login/registration
+  onOpenLegal?: (tab: 'terms' | 'privacy') => void; // Link to view legal terms
 }
 
+// Carousel poster data shown in the left column
 const ROTATING_MOVIE_SLIDES = [
   {
     title: 'The Dark Knight',
@@ -41,7 +52,8 @@ const ROTATING_MOVIE_SLIDES = [
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess, onOpenLegal }) => {
   const { login, register } = useAuth();
-  const [isRegister, setIsRegister] = useState(true); // default to Create Account matching reference mockup
+  // isRegister: true = Create Account form; false = Sign In form
+  const [isRegister, setIsRegister] = useState(true);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');

@@ -4,10 +4,19 @@ import { api } from '../services/api';
 import { Film, AlertCircle, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { SearchIcon, FilterSlidersIcon, PlayArrowIcon } from '../components/Icons';
 
+// --- Page Component: MovieCatalogPage ---
+// Purpose: Main storefront / home page of the cinema booking application.
+// Features:
+// 1. Hero banner carousel with top 5 featured movies and smooth 5-second auto-slide.
+// 2. Real-time search bar to find movies by title.
+// 3. Filter pills for Certification (All, U, UA, A) and Language (All, English, Hindi, Telugu).
+// 4. Movie grid showing posters, ratings, duration, genre, and a "Book Tickets" action button.
+
 interface MovieCatalogPageProps {
-  onSelectMovie: (movieId: number) => void;
+  onSelectMovie: (movieId: number) => void; // Callback when user clicks on a movie to book/view details
 }
 
+// Fallback catalog: Pre-loaded movie records to guarantee zero layout shift if offline or first-time render
 const INITIAL_CATALOG_FALLBACK: Movie[] = [
   {
     id: 1,
@@ -78,6 +87,7 @@ const INITIAL_CATALOG_FALLBACK: Movie[] = [
 ];
 
 export const MovieCatalogPage: React.FC<MovieCatalogPageProps> = ({ onSelectMovie }) => {
+  // State: movies list initialized from cache or fallback
   const [movies, setMovies] = useState<Movie[]>(() => {
     try {
       const cached = localStorage.getItem('yozigo_movies_cache') || sessionStorage.getItem('yozigo_movies');
@@ -88,11 +98,12 @@ export const MovieCatalogPage: React.FC<MovieCatalogPageProps> = ({ onSelectMovi
   });
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
+  // Search & Filter State:
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRating, setSelectedRating] = useState<string>('ALL');
   const [selectedLang, setSelectedLang] = useState<string>('ALL');
 
+  // Fetch live movies from backend on initial mount
   useEffect(() => {
     fetchMovies();
   }, []);

@@ -20,11 +20,20 @@ import {
 } from './Icons';
 import type { LegalSection } from '../pages/LegalPage';
 
+// --- Component: Navbar ---
+// Purpose: Primary top navigation bar across the cinema booking application.
+// Features:
+// 1. Brand logo and venue selector (Bengaluru).
+// 2. Role-based navigation: Admins see "Admin Console", Customers see "Movies" & "My Bookings".
+// 3. Dark / Light theme toggle button.
+// 4. User profile dropdown menu (with Terms, Privacy, Disclaimer, and Logout).
+// 5. Responsive mobile bottom navigation bar.
+
 interface NavbarProps {
-  currentView: 'movies' | 'my-bookings' | 'admin' | 'booking';
-  onNavigate: (view: 'movies' | 'my-bookings' | 'admin', sectionId?: string) => void;
-  onOpenAuth: () => void;
-  onNavigateLegal?: (section: LegalSection) => void;
+  currentView: 'movies' | 'my-bookings' | 'admin' | 'booking'; // Active screen/page
+  onNavigate: (view: 'movies' | 'my-bookings' | 'admin', sectionId?: string) => void; // Navigation trigger
+  onOpenAuth: () => void;                                      // Opens login/signup modal
+  onNavigateLegal?: (section: LegalSection) => void;            // Opens legal policy modal
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -33,12 +42,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth, 
   onNavigateLegal 
 }) => {
+  // Grab auth credentials and theme functions
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  // Controls user profile dropdown visibility
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const mobileSheetRef = useRef<HTMLDivElement>(null);
 
+  // Friendly display name: "Cinema Admin" for administrator, or user's name
   const displayName = user
     ? (user.role === 'admin' || user.name === 'Cinema Administrator' ? 'Cinema Admin' : user.name)
     : '';

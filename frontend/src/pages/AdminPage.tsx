@@ -5,8 +5,19 @@ import { useAuth } from '../context/AuthContext';
 import { Trash2, AlertCircle, CheckCircle2, BarChart3, Calendar, Clapperboard, Layers, Search, RefreshCw } from 'lucide-react';
 import { SecurityShieldIcon } from '../components/Icons';
 
+// --- Page Component: AdminPage (Flow 7 & 9) ---
+// Purpose: Cinema Management Console for system administrators.
+// Key Capabilities:
+// 1. Role Security Guard: Strictly inaccessible unless user.role === 'admin'.
+// 2. Global Cinema Ledger: Real-time KPIs for Total Revenue, Total Bookings, and Occupancy Rate.
+// 3. Per-Show Occupancy Audit: Visual breakdown of Booked vs Available seats and transactions.
+// 4. Movie Catalog Manager: Add or delete movies from the cinema roster.
+// 5. Show Scheduler: Add new screenings with automated overlap prevention (15m buffer).
+
 export const AdminPage: React.FC = () => {
   const { user } = useAuth();
+  
+  // Navigation tabs within admin console: 'occupancy', 'shows', or 'movies'
   const [activeTab, setActiveTab] = useState<'occupancy' | 'shows' | 'movies'>(() => {
     if (typeof window !== 'undefined') {
       const h = window.location.hash.toLowerCase();
@@ -21,7 +32,7 @@ export const AdminPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // New Movie Form State
+  // Form State: Add Movie
   const [movieForm, setMovieForm] = useState({
     title: '',
     description: '',
@@ -32,7 +43,7 @@ export const AdminPage: React.FC = () => {
     genre: '',
   });
 
-  // New Show Form State
+  // Form State: Schedule Show
   const [showForm, setShowForm] = useState({
     movie_id: 0,
     screen_name: 'Screen 1',
@@ -40,7 +51,7 @@ export const AdminPage: React.FC = () => {
     ticket_price: 250,
   });
 
-  // Occupancy & Overview State
+  // State: Occupancy & Ledger
   const [selectedShowId, setSelectedShowId] = useState<number | 'ALL'>('ALL');
   const [overviewData, setOverviewData] = useState<AdminCinemaOverviewResponse | null>(null);
   const [occupancyData, setOccupancyData] = useState<AdminOccupancyResponse | null>(null);
@@ -48,6 +59,7 @@ export const AdminPage: React.FC = () => {
   const [ledgerSearch, setLedgerSearch] = useState('');
   const [ledgerStatusFilter, setLedgerStatusFilter] = useState<'ALL' | 'CONFIRMED' | 'CANCELLED'>('ALL');
 
+  // Load all admin data on mount if current user is admin
   useEffect(() => {
     if (user?.role === 'admin') {
       loadInitialData();

@@ -1,3 +1,12 @@
+# --- API Router: Cinema Administration (Flow 7 & 9) ---
+# Purpose: Protected management endpoints for Cinema Administrators.
+# Enforces: All routes require get_current_admin dependency (user.role == "admin").
+# Features:
+# 1. Movie CRUD (Create, Edit, Delete with active booking protection).
+# 2. Show Scheduling with automated interval overlap detection:
+#    (Show.start_time < new_end_time AND Show.end_time > new_start_time).
+# 3. Real-Time Occupancy & Revenue Audit per show and across the entire cinema.
+
 from datetime import datetime, timedelta
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -24,6 +33,8 @@ router = APIRouter(prefix="/admin", tags=["Admin Operations"])
 
 # --- Movie Management (Flow 7) ---
 
+# Endpoint: POST /api/v1/admin/movies
+# Creates a new movie entry in the cinema database
 @router.post("/movies", response_model=MovieOut, status_code=status.HTTP_201_CREATED)
 def admin_create_movie(
     payload: MovieCreate,

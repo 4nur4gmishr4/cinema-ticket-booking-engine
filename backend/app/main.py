@@ -1,18 +1,25 @@
+# --- Main Application Entry Point: FastAPI ---
+# Purpose: Initializes the backend web server, database tables, background workers, and API routes.
+
 import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base, SessionLocal
-import app.models  # ensure models are registered
+import app.models  # Registers all SQLAlchemy database tables
 from app.api import auth, movies, shows, seats, bookings, admin
 
-# Create tables
+# Step 1: Ensure all database tables are created on startup if they don't already exist
 Base.metadata.create_all(bind=engine)
 
+# Step 2: Lifespan Manager
+# Runs a non-blocking background task that wakes up every 30 seconds
+# to delete any seat holds that have passed their 5-minute expiration time.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     stop_event = asyncio.Event()
+
     async def cleanup_worker():
         while not stop_event.is_set():
             try:
@@ -22,16 +29,21 @@ async def lifespan(app: FastAPI):
             except Exception:
                 pass
             try:
+                # Wait for 30 seconds before running next cleanup cycle
                 await asyncio.wait_for(stop_event.wait(), timeout=30.0)
             except (asyncio.TimeoutError, TimeoutError):
                 pass
+
+    # Start the worker task in the background
     worker_task = asyncio.create_task(cleanup_worker())
     try:
         yield
     finally:
+        # Gracefully shut down background task when server stops
         stop_event.set()
         await worker_task
 
+# Step 3: Instantiate FastAPI Application
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,

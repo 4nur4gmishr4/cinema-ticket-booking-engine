@@ -3,10 +3,18 @@ import { createPortal } from 'react-dom';
 import type { BookingOut } from '../types';
 import { CheckCircle2, Calendar, Clock, X, ArrowRight } from 'lucide-react';
 
+// --- Component: BookingConfirmationModal ---
+// Purpose: Displays the issued cinema ticket voucher after payment succeeds.
+// Shows:
+// 1. Unique Booking Reference (e.g. YOZ-A1B2C3).
+// 2. Movie title, screen name, language, and showtime.
+// 3. Badges for booked seat numbers.
+// 4. Total amount paid and instant navigation button to "My Bookings" page.
+
 interface BookingConfirmationModalProps {
-  booking: BookingOut | null;
-  onClose: () => void;
-  onViewMyBookings: () => void;
+  booking: BookingOut | null;      // Confirmed booking object received from backend
+  onClose: () => void;             // Callback to dismiss the ticket modal
+  onViewMyBookings: () => void;    // Callback to navigate to "My Bookings" screen
 }
 
 export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({
@@ -14,7 +22,8 @@ export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> =
   onClose,
   onViewMyBookings,
 }) => {
-  // Lock body and html scroll while modal is mounted
+  // Hook: Prevents the background page from scrolling while viewing the ticket voucher,
+  // and allows user to dismiss the modal by pressing the 'Escape' key.
   useEffect(() => {
     if (!booking) return;
     const originalBodyOverflow = document.body.style.overflow;

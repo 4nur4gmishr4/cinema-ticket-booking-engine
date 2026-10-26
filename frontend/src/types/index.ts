@@ -1,17 +1,23 @@
+// --- TypeScript Definitions ---
+// Purpose: Shared data types matching FastAPI backend Pydantic schemas.
+
+// User profile interface
 export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'customer' | 'admin';
+  role: 'customer' | 'admin';     // Access control: customer or cinema admin
   created_at: string;
 }
 
+// Authentication response returned upon login
 export interface AuthResponse {
-  access_token: string;
-  token_type: string;
-  user: User;
+  access_token: string;           // JWT bearer token string
+  token_type: string;             // Always "bearer"
+  user: User;                     // Authenticated user profile
 }
 
+// Movie record
 export interface Movie {
   id: number;
   title: string;
@@ -25,31 +31,35 @@ export interface Movie {
   created_at?: string;
 }
 
+// Show screening schedule
 export interface Show {
   id: number;
   movie_id: number;
-  screen_name: string;
-  start_time: string;
-  end_time: string;
-  ticket_price: number;
-  available_seats: number;
+  screen_name: string;            // E.g. "Screen 1"
+  start_time: string;             // ISO-8601 UTC timestamp
+  end_time: string;               // ISO-8601 UTC timestamp (start_time + duration + 15m buffer)
+  ticket_price: number;           // Price in INR (₹)
+  available_seats: number;        // Total free seats out of 80
   movie?: Movie;
 }
 
+// Grouped showtimes for a specific date
 export interface ShowsByDateGroup {
-  date: string;
-  display_date: string;
+  date: string;                   // E.g. "2026-10-26"
+  display_date: string;           // E.g. "Mon, Oct 26"
   shows: Show[];
 }
 
+// Seat reservation status in auditorium map
 export type SeatStatus = 'AVAILABLE' | 'HELD_BY_ME' | 'HELD_BY_OTHER' | 'BOOKED';
 
+// Individual seat details in the 80-seat grid
 export interface SeatOut {
-  seat_number: string;
-  row: string;
-  col: number;
-  status: SeatStatus;
-  price: number;
+  seat_number: string;            // E.g. "A1", "H10"
+  row: string;                    // "A" through "H"
+  col: number;                    // 1 through 10
+  status: SeatStatus;             // Current availability
+  price: number;                  // Ticket price in INR
 }
 
 export interface SeatMapResponse {
